@@ -9,7 +9,7 @@ def get_driver(url):
 def get_connection():
     conn_str = ("DRIVER={ODBC Driver 17 for SQL Server};"
             "Server=(localdb)\MSSQLLocalDB;"
-            "Database=Northwind;"
+            "Database=TurboAz;"
             "UID=testLogin;"
             "PWD=1234;")
     conn = pyodbc.connect(conn_str)
