@@ -1,7 +1,6 @@
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 import methods
-import datetime
 
 conn = methods.get_connection()
 driver = methods.get_driver("about:blank")
@@ -39,13 +38,9 @@ for brand in methods.brands:
                 "status": "",
                 "owners": "",
                 "market_version": "",
-                "price": ""
+                "price": "",
+                "description": ""
             }
-
-            car_details_price = driver.find_elements(By.CLASS_NAME, 'product-sidebar__box')
-            for car_price in car_details_price:
-                price = car_price.find_element(By.CLASS_NAME, 'product-price').text
-                car_data["price"] = price
 
             car_details = driver.find_elements(By.CSS_SELECTOR, ".product-properties__i")
             for car_detail in car_details:
@@ -53,6 +48,30 @@ for brand in methods.brands:
                 value_text = car_detail.find_element(By.CSS_SELECTOR, ".product-properties__i-value").text
                 car_data[methods.properties_dict[label_text]] = value_text
 
+            car_details_price = driver.find_elements(By.CLASS_NAME, 'product-sidebar__box')
+            for car_price in car_details_price:
+                price = car_price.find_element(By.CLASS_NAME, 'product-price').text
+                car_data["price"] = price
+            # will be fixed this part :
+            car_data["description"] = driver.find_elements(By.CLASS_NAME, 'product-description__content')[0].text
+            for desc in driver.find_elements(By.CLASS_NAME, 'product-description__content'):
+                a = desc.find_elements(By.TAG_NAME, 'p')
+
+            car_extras = driver.find_elements(By.CLASS_NAME, 'product-extras__i')
+            extras_list = []
+            for car_extra in car_extras:
+                extras_list.append(car_extra.text)
+            extras_str = ",".join(extras_list)
+
+            turbo_id = driver.find_elements(By.CLASS_NAME, 'product-actions__id')[0].text
+
+            shop_name_element = driver.find_elements(By.CLASS_NAME, 'product-shop__owner-name')
+            shop_name = shop_name_element[0].text if len(shop_name_element) > 0 else ""
+
+            owner_name_element = driver.find_elements(By.CLASS_NAME, 'product-owner__info-name')
+            owner_name = owner_name_element[0].text if len(owner_name_element) > 0 else ""
+
+            
             #-------------------------------------------------------------------------------------
             table_name = "Cars"
             columns = ["Brand", "Model", "City", "Prod_Year", "Ban_Type", "Color", "Engine", "Mileage", "Transmission", "Gear", "IsNew", "Seats_Count", "Status", "Market_version", "Description", "Price", "Additional_Features", "Owners"]
