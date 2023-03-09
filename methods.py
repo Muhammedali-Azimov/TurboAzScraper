@@ -1,5 +1,5 @@
 from selenium import webdriver
-import pyodbc
+import psycopg2
 
 def get_driver(url):
     driver = webdriver.Chrome("C:/Users/azimo/Desktop/chromedriver.exe")
@@ -7,12 +7,11 @@ def get_driver(url):
     return driver
 
 def get_connection():
-    conn_str = ("DRIVER={ODBC Driver 17 for SQL Server};"
-            "Server=(localdb)\MSSQLLocalDB;"
-            "Database=TurboAz;"
-            "UID=testLogin;"
-            "PWD=1234;")
-    conn = pyodbc.connect(conn_str)
+    conn = psycopg2.connect(
+        host="localhost",
+        database="TurboAz",
+        user="testLogin",
+        password="1234")
     return conn
 
 def get_url_for_brand(brand):
@@ -28,6 +27,24 @@ def close_tab(driver, tabno):
 
 def switch_tab(driver, tabno):
     driver.switch_to.window(driver.window_handles[tabno])
+
+properties_dict = {
+    "Marka": "brand",
+    "Model": "model",
+    "Şəhər": "city",
+    "Buraxılış ili": "prod_year",
+    "Ban növü": "ban_type",
+    "Rəng": "color",
+    "Mühərrik": "engine",
+    "Yürüş": "mileage",
+    "Sürətlər qutusu": "transmission",
+    "Ötürücü": "gear",
+    "Yeni": "isnew",
+    "Yerlərin sayı": "seats_count",
+    "Vəziyyəti": "status",
+    "Sahiblər": "owners",
+    "Hansı bazar üçün yığılıb": "market_version"
+}
 
 brands =[[280, 'Abarth'],  [28, 'Acura'],  [30, 'Alfa Romeo'],  [156, 'Aprilia'],  [86, 'Aston Martin'],  [268, 'ATV'],  
         [9, 'Audi'],  [274, 'Avia'],  [218, 'Baic'],  [327, 'Bajaj'],  [19, 'Bentley'],  [387, 'Bestune'],  [3, 'BMW'], 

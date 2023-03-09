@@ -5,7 +5,7 @@ import datetime
 
 conn = methods.get_connection()
 driver = methods.get_driver("about:blank")
-
+n=0
 for brand in methods.brands:
     # print(brand[0], brand[1])
     main_url = methods.get_url_for_brand(brand)
@@ -16,7 +16,6 @@ for brand in methods.brands:
 
     while True:
         cars = driver.find_elements(By.CLASS_NAME, 'products-i__link')
-        n=0
         for car in cars:
             # a = car.parent.find_element(By.CLASS_NAME, 'products-title')
             car_link = car.get_attribute('href')
@@ -24,53 +23,47 @@ for brand in methods.brands:
             methods.switch_tab(driver, 1)
             # time.sleep(3)
 
+            car_data = {
+                "brand": "",
+                "model": "",
+                "city": "",
+                "prod_year": "",
+                "ban_type": "",
+                "color": "",
+                "engine": "",
+                "mileage": "",
+                "transmission": "",
+                "gear": "",
+                "isnew": "",
+                "seats_count": "",
+                "status": "",
+                "owners": "",
+                "market_version": "",
+                "price": ""
+            }
+
             car_details_price = driver.find_elements(By.CLASS_NAME, 'product-sidebar__box')
             for car_price in car_details_price:
                 price = car_price.find_element(By.CLASS_NAME, 'product-price').text
+                car_data["price"] = price
 
             car_details = driver.find_elements(By.CSS_SELECTOR, ".product-properties__i")
             for car_detail in car_details:
                 label_text = car_detail.find_element(By.CSS_SELECTOR, ".product-properties__i-name").text
                 value_text = car_detail.find_element(By.CSS_SELECTOR, ".product-properties__i-value").text
+                car_data[methods.properties_dict[label_text]] = value_text
 
-                if label_text == "Şəhər":
-                    city = value_text
-                elif label_text == "Marka":
-                    brand = value_text
-                elif label_text == "Model":
-                    model = value_text
-                elif label_text == "Buraxılış ili":
-                    year = value_text
-                elif label_text == "Ban növü":
-                    ban_type = value_text
-                elif label_text == "Rəng":
-                    color = value_text
-                elif label_text == "Mühərrik":
-                    engine = value_text
-                elif label_text == "Yürüş":
-                    mileage = value_text
-                elif label_text == "Sürətlər qutusu":
-                    transmission = value_text
-                elif label_text == "Ötürücü":
-                    gear = value_text
-                elif label_text == "Yeni":
-                    new = value_text
-                elif label_text == "Yerlərin sayı":
-                    seating_capacity = value_text
-                elif label_text == "Vəziyyəti":
-                    condition = value_text
-                elif label_text == "Sahiblər":
-                    owners = value_text
-                elif label_text == "Hansı bazar üçün yığılıb":
-                    market = value_text
+            #-------------------------------------------------------------------------------------
+            table_name = "Cars"
+            columns = ["Brand", "Model", "City", "Prod_Year", "Ban_Type", "Color", "Engine", "Mileage", "Transmission", "Gear", "IsNew", "Seats_Count", "Status", "Market_version", "Description", "Price", "Additional_Features", "Owners"]
+            values = [car_data.get(column.lower(), "") for column in columns]
 
-            sql = f'''insert into Cars (Brand, Model, City, Prod_Year, Ban_Type, Color, Engine, Mileage, Transmission, Gear, IsNew, 
-            Seats_Count, Status, Market_version, Description, Price, Additional_Features) values 
-            (N'{brand}', N'{model}', N'{city}', N'{year}',N'{ban_type}',N'{color}',N'{engine}', N'{mileage}',N'{transmission}',N'{gear}',
-            N'{new}',N'{seating_capacity}',N'{condition}',N'{market}',N'AA', N'{price}', N'Additional')'''
             cursor = conn.cursor()
-            cursor.execute(sql)
+            sql = f'''INSERT INTO "{table_name}" ("{'", "'.join(columns)}") VALUES ({', '.join(['%s' for _ in range(len(columns))])})'''
+            cursor.execute(sql, values)
             conn.commit()
+            #-------------------------------------------------------------------------------------
+
 
             driver.close()
             methods.switch_tab(driver, 0)
