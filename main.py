@@ -1,12 +1,14 @@
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 import methods
+from datetime import datetime
 
 conn = methods.get_connection()
 driver = methods.get_driver("about:blank")
-n=0
+
 for brand in methods.brands:
-    # print(brand[0], brand[1])
+    n=0
+    print(brand[0], brand[1])
     main_url = methods.get_url_for_brand(brand)
     methods.open_tab(driver, main_url)
     methods.switch_tab(driver, 1)
@@ -16,80 +18,115 @@ for brand in methods.brands:
     while True:
         cars = driver.find_elements(By.CLASS_NAME, 'products-i__link')
         for car in cars:
-            # a = car.parent.find_element(By.CLASS_NAME, 'products-title')
-            car_link = car.get_attribute('href')
-            methods.open_tab(driver, car_link)
-            methods.switch_tab(driver, 1)
-            # time.sleep(3)
+            try:
+                car_link = car.get_attribute('href')
+                methods.open_tab(driver, car_link)
+                methods.switch_tab(driver, 1)
 
-            car_data = {
-                "brand": "",
-                "model": "",
-                "city": "",
-                "prod_year": "",
-                "ban_type": "",
-                "color": "",
-                "engine": "",
-                "mileage": "",
-                "transmission": "",
-                "gear": "",
-                "isnew": "",
-                "seats_count": "",
-                "status": "",
-                "owners": "",
-                "market_version": "",
-                "price": "",
-                "description": ""
-            }
+                car_data = {
+                    "brand": "",
+                    "model": "",
+                    "city": "",
+                    "prod_year": "",
+                    "ban_type": "",
+                    "color": "",
+                    "engine": "",
+                    "mileage": "",
+                    "transmission": "",
+                    "gear": "",
+                    "isnew": "",
+                    "seats_count": "",
+                    "status": "",
+                    "owners": "",
+                    "market_version": "",
+                    "price": "",
+                    "description": "",
+                    "extras": "",
+                    "turbo_id": "",
+                    "shop_name": "",
+                    "owner_name": "",
+                    "insert_date": str(datetime.now())
+                }
 
-            car_details = driver.find_elements(By.CSS_SELECTOR, ".product-properties__i")
-            for car_detail in car_details:
-                label_text = car_detail.find_element(By.CSS_SELECTOR, ".product-properties__i-name").text
-                value_text = car_detail.find_element(By.CSS_SELECTOR, ".product-properties__i-value").text
-                car_data[methods.properties_dict[label_text]] = value_text
+                car_details = driver.find_elements(By.CSS_SELECTOR, ".product-properties__i")
+                for car_detail in car_details:
+                    label_text = car_detail.find_element(By.CSS_SELECTOR, ".product-properties__i-name").text
+                    value_text = car_detail.find_element(By.CSS_SELECTOR, ".product-properties__i-value").text
+                    car_data[methods.properties_dict[label_text]] = value_text
 
-            car_details_price = driver.find_elements(By.CLASS_NAME, 'product-sidebar__box')
-            for car_price in car_details_price:
-                price = car_price.find_element(By.CLASS_NAME, 'product-price').text
-                car_data["price"] = price
-            # will be fixed this part :
-            car_data["description"] = driver.find_elements(By.CLASS_NAME, 'product-description__content')[0].text
-            for desc in driver.find_elements(By.CLASS_NAME, 'product-description__content'):
-                a = desc.find_elements(By.TAG_NAME, 'p')
+                car_details_price = driver.find_elements(By.CLASS_NAME, 'product-sidebar__box')
+                for car_price in car_details_price:
+                    price = car_price.find_element(By.CLASS_NAME, 'product-price').text
+                    car_data["price"] = price
 
-            car_extras = driver.find_elements(By.CLASS_NAME, 'product-extras__i')
-            extras_list = []
-            for car_extra in car_extras:
-                extras_list.append(car_extra.text)
-            extras_str = ",".join(extras_list)
+                try:
+                    desc_btn = driver.find_element(By.CSS_SELECTOR, '.product-description__btn--more')
+                    if desc_btn.text != "":
+                        desc_btn.click()
+                except NoSuchElementException:
+                    pass
 
-            turbo_id = driver.find_elements(By.CLASS_NAME, 'product-actions__id')[0].text
+                try:
+                    description_elements = driver.find_elements(By.CLASS_NAME, 'product-description__content')
+                    for description_element in description_elements:
+                        descriptions = description_element.find_elements(By.TAG_NAME, 'p')
+                        desc_str = ""
+                        for description in descriptions: 
+                            desc_str = desc_str + description.text           
+                        car_data["description"] = desc_str
+                except NoSuchElementException:
+                    pass
 
-            shop_name_element = driver.find_elements(By.CLASS_NAME, 'product-shop__owner-name')
-            shop_name = shop_name_element[0].text if len(shop_name_element) > 0 else ""
-
-            owner_name_element = driver.find_elements(By.CLASS_NAME, 'product-owner__info-name')
-            owner_name = owner_name_element[0].text if len(owner_name_element) > 0 else ""
-
-            
-            #-------------------------------------------------------------------------------------
-            table_name = "Cars"
-            columns = ["Brand", "Model", "City", "Prod_Year", "Ban_Type", "Color", "Engine", "Mileage", "Transmission", "Gear", "IsNew", "Seats_Count", "Status", "Market_version", "Description", "Price", "Additional_Features", "Owners"]
-            values = [car_data.get(column.lower(), "") for column in columns]
-
-            cursor = conn.cursor()
-            sql = f'''INSERT INTO "{table_name}" ("{'", "'.join(columns)}") VALUES ({', '.join(['%s' for _ in range(len(columns))])})'''
-            cursor.execute(sql, values)
-            conn.commit()
-            #-------------------------------------------------------------------------------------
+                try:
+                    car_extras = driver.find_elements(By.CLASS_NAME, 'product-extras__i')
+                    extras_list = []
+                    for car_extra in car_extras:
+                        extras_list.append(car_extra.text)
+                    extras_str = ",".join(extras_list)
+                    car_data["extras"] = extras_str
+                except NoSuchElementException:
+                    pass
 
 
-            driver.close()
-            methods.switch_tab(driver, 0)
-            n=n+1
-            print(n)
+                turbo_id = driver.find_elements(By.CLASS_NAME, 'product-actions__id')[0].text
+                car_data["turbo_id"] = turbo_id
+
+                shop_name_element = driver.find_elements(By.CLASS_NAME, 'product-shop__owner-name')
+                shop_name = shop_name_element[0].text if len(shop_name_element) > 0 else ""
+                car_data["shop_name"] = shop_name
+
+                owner_name_element = driver.find_elements(By.CLASS_NAME, 'product-owner__info-name')
+                owner_name = owner_name_element[0].text if len(owner_name_element) > 0 else ""
+                car_data["owner_name"] = owner_name
+
+                
+                #-------------------------------------------------------------------------------------
+                table_name = "Cars"
+                columns = ["Brand", "Model", "City", "Prod_Year", "Ban_Type", "Color", "Engine", "Mileage", "Transmission", "Gear", "IsNew", "Seats_Count", "Status", "Market_version", "Description", "Price", "Owners", "Extras", "Turbo_Id", "Shop_Name", "Owner_Name", "Insert_Date"]
+                values = [car_data.get(column.lower(), "") for column in columns]
+
+                cursor = conn.cursor()
+                sql = f'''INSERT INTO "{table_name}" ("{'", "'.join(columns)}") VALUES ({', '.join(['%s' for _ in range(len(columns))])})'''
+                cursor.execute(sql, values)
+                conn.commit()
+                #-------------------------------------------------------------------------------------
+
+                driver.close()
+                methods.switch_tab(driver, 0)
+                n=n+1
+                print(n)
+            except Exception as ex:
+                cursor = conn.cursor()
+                sql = f'''INSERT INTO "Errors" ("Error", "TurboAzId","Insert_Date") VALUES ({ex}, {turbo_id}, {str(datetime.now())}'''
+                cursor.execute(sql, values)
+                conn.commit()
+                break
+
         try:
             next_button = driver.find_element(By.LINK_TEXT, 'Növbəti')
             next_button.click()
         except NoSuchElementException:
             break
+
+
+
