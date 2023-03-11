@@ -2,9 +2,8 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 import methods
 from datetime import datetime
+from selenium.webdriver.common.action_chains import ActionChains
 import time
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 conn = methods.get_connection()
 driver = methods.get_driver("about:blank")
@@ -18,7 +17,6 @@ for brand in methods.brands:
     methods.switch_tab(driver, 1)
     methods.close_tab(driver, 0)
     methods.switch_tab(driver, 0)
-    time.sleep(2)
 
 
     while True:
@@ -39,7 +37,6 @@ for brand in methods.brands:
                 car_link = car.get_attribute('href')
                 methods.open_tab(driver, car_link)
                 methods.switch_tab(driver, 1)
-                time.sleep(2)
 
                 car_data = {
                     "brand": "",
@@ -65,6 +62,11 @@ for brand in methods.brands:
                     "owner_name": "",
                     "insert_date": str(datetime.now())
                 }
+                try:
+                    turbo_id = driver.find_elements(By.CLASS_NAME, 'product-actions__id')[0].text
+                    car_data["turbo_id"] = turbo_id
+                except:
+                    pass
 
                 car_details = driver.find_elements(By.CSS_SELECTOR, ".product-properties__i")
                 for car_detail in car_details:
@@ -77,12 +79,12 @@ for brand in methods.brands:
                     price = car_price.find_element(By.CLASS_NAME, 'product-price').text
                     car_data["price"] = price
 
-                try:
-                    desc_btn = driver.find_element(By.CSS_SELECTOR, '.product-description__btn--more')
-                    if desc_btn.text != "":
-                        desc_btn.click()
-                except NoSuchElementException:
-                    pass
+                # try:
+                #     desc_btn = driver.find_element(By.CSS_SELECTOR, '.product-description__btn--more')
+                #     if desc_btn.text != "":
+                #         desc_btn.click()
+                # except NoSuchElementException:
+                #     pass
 
                 try:
                     description_elements = driver.find_elements(By.CLASS_NAME, 'product-description__content')
@@ -90,6 +92,7 @@ for brand in methods.brands:
                         descriptions = description_element.find_elements(By.TAG_NAME, 'p')
                         desc_str = ""
                         for description in descriptions: 
+                            ActionChains(driver).move_to_element(description).perform()
                             desc_str = desc_str + description.text           
                         car_data["description"] = desc_str
                 except NoSuchElementException:
@@ -105,34 +108,36 @@ for brand in methods.brands:
                 except NoSuchElementException:
                     pass
 
+                try:
+                    shop_name_element = driver.find_elements(By.CLASS_NAME, 'product-shop__owner-name')
+                    shop_name = shop_name_element[0].text if len(shop_name_element) > 0 else ""
+                    car_data["shop_name"] = shop_name
 
-                turbo_id = driver.find_elements(By.CLASS_NAME, 'product-actions__id')[0].text
-                car_data["turbo_id"] = turbo_id
-
-                shop_name_element = driver.find_elements(By.CLASS_NAME, 'product-shop__owner-name')
-                shop_name = shop_name_element[0].text if len(shop_name_element) > 0 else ""
-                car_data["shop_name"] = shop_name
-
-                owner_name_element = driver.find_elements(By.CLASS_NAME, 'product-owner__info-name')
-                owner_name = owner_name_element[0].text if len(owner_name_element) > 0 else ""
-                car_data["owner_name"] = owner_name
+                    owner_name_element = driver.find_elements(By.CLASS_NAME, 'product-owner__info-name')
+                    owner_name = owner_name_element[0].text if len(owner_name_element) > 0 else ""
+                    car_data["owner_name"] = owner_name
+                except:
+                    pass
 
                 
                 #-------------------------------------------------------------------------------------
-                table_name = "Cars"
-                columns = ["Brand", "Model", "City", "Prod_Year", "Ban_Type", "Color", "Engine", "Mileage", "Transmission", "Gear", "IsNew", "Seats_Count", "Status", "Market_version", "Description", "Price", "Owners", "Extras", "Turbo_Id", "Shop_Name", "Owner_Name", "Insert_Date"]
-                values = [car_data.get(column.lower(), "") for column in columns]
+                try:
+                    table_name = "Cars"
+                    columns = ["Brand", "Model", "City", "Prod_Year", "Ban_Type", "Color", "Engine", "Mileage", "Transmission", "Gear", "IsNew", "Seats_Count", "Status", "Market_version", "Description", "Price", "Owners", "Extras", "Turbo_Id", "Shop_Name", "Owner_Name", "Insert_Date"]
+                    values = [car_data.get(column.lower(), "") for column in columns]
 
-                cursor = conn.cursor()
-                sql = f'''INSERT INTO "{table_name}" ("{'", "'.join(columns)}") VALUES ({', '.join(['%s' for _ in range(len(columns))])})'''
-                cursor.execute(sql, values)
-                conn.commit()
+                    cursor = conn.cursor()
+                    sql = f'''INSERT INTO "{table_name}" ("{'", "'.join(columns)}") VALUES ({', '.join(['%s' for _ in range(len(columns))])})'''
+                    cursor.execute(sql, values)
+                    conn.commit()
+                except:
+                    pass
                 #-------------------------------------------------------------------------------------
 
                 driver.close()
                 methods.switch_tab(driver, 0)
                 n=n+1
-                print(brand,' ', n)
+                print(brand[1],' ', n)
             except Exception as ex:
                 conn.rollback()
                 cursor = conn.cursor()

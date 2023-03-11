@@ -46,8 +46,7 @@ properties_dict = {
     "Hansı bazar üçün yığılıb": "market_version"
 }
 
-brands =[[280, 'Abarth'],  [28, 'Acura'],  [30, 'Alfa Romeo'],  [156, 'Aprilia'],  [86, 'Aston Martin'],  [268, 'ATV'],  
-        [9, 'Audi'],  [274, 'Avia'],  [218, 'Baic'],  [327, 'Bajaj'],  [19, 'Bentley'],  [387, 'Bestune'],  [3, 'BMW'], 
+brands =[[387, 'Bestune'],  [3, 'BMW'], 
         [62, 'BMW Alpina'],  [92, 'Brilliance'],  [84, 'Buick'],  [51, 'BYD'],  [395, 'C.Moto'],  [38, 'Cadillac'],  
         [220, 'Can-Am'],  [397, 'Cevo'],  [259, 'CFMOTO'],  [163, 'Changan'],  [52, 'Chery'],  [41, 'Chevrolet'], 
         [10, 'Chrysler'],  [27, 'Citroen'],  [76, 'Dacia'],  [180, 'Dadi'],  [11, 'Daewoo'],  [91, 'DAF'],  
