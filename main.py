@@ -2,26 +2,44 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 import methods
 from datetime import datetime
+import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 conn = methods.get_connection()
 driver = methods.get_driver("about:blank")
 
 for brand in methods.brands:
     n=0
+    page = 1
     print(brand[0], brand[1])
-    main_url = methods.get_url_for_brand(brand)
+    main_url = methods.get_url_for_page(brand,page)
     methods.open_tab(driver, main_url)
     methods.switch_tab(driver, 1)
     methods.close_tab(driver, 0)
     methods.switch_tab(driver, 0)
+    time.sleep(2)
+
 
     while True:
-        cars = driver.find_elements(By.CLASS_NAME, 'products-i__link')
+        page = page + 1
+        containers = driver.find_elements(By.CLASS_NAME, 'tz-container')
+        for container in containers:
+            try:
+                title = container.find_element(By.CLASS_NAME, 'products-title').text
+                if 'elan' in title:
+                    cars = container.find_elements(By.CLASS_NAME, 'products-i__link')
+                    break
+            except NoSuchElementException:
+                pass
+        else:
+            break
         for car in cars:
             try:
                 car_link = car.get_attribute('href')
                 methods.open_tab(driver, car_link)
                 methods.switch_tab(driver, 1)
+                time.sleep(2)
 
                 car_data = {
                     "brand": "",
@@ -114,19 +132,17 @@ for brand in methods.brands:
                 driver.close()
                 methods.switch_tab(driver, 0)
                 n=n+1
-                print(n)
+                print(brand,' ', n)
             except Exception as ex:
+                conn.rollback()
                 cursor = conn.cursor()
-                sql = f'''INSERT INTO "Errors" ("Error", "TurboAzId","Insert_Date") VALUES ({ex}, {turbo_id}, {str(datetime.now())}'''
-                cursor.execute(sql, values)
+                sql = f'''INSERT INTO "Errors" ("Error", "TurboAzId","Insert_Date") VALUES ('{ex}', '{turbo_id}', '{str(datetime.now())}') '''
+                cursor.execute(sql)
                 conn.commit()
-                break
+                pass
 
-        try:
-            next_button = driver.find_element(By.LINK_TEXT, 'Növbəti')
-            next_button.click()
-        except NoSuchElementException:
-            break
+        next_page_url = methods.get_url_for_page(brand,page)
+        driver.get(next_page_url)
 
 
 
