@@ -60,6 +60,7 @@ for brand in methods.brands:
                     "turbo_id": "",
                     "shop_name": "",
                     "owner_name": "",
+                    "crashed": "",
                     "insert_date": str(datetime.now())
                 }
                 try:
@@ -123,25 +124,27 @@ for brand in methods.brands:
                 #-------------------------------------------------------------------------------------
                 try:
                     table_name = "Cars"
-                    columns = ["Brand", "Model", "City", "Prod_Year", "Ban_Type", "Color", "Engine", "Mileage", "Transmission", "Gear", "IsNew", "Seats_Count", "Status", "Market_version", "Description", "Price", "Owners", "Extras", "Turbo_Id", "Shop_Name", "Owner_Name", "Insert_Date"]
+                    columns = ["Brand", "Model", "City", "Prod_Year", "Ban_Type", "Color", "Engine", "Mileage", "Transmission", "Gear", "IsNew", "Seats_Count", "Status", "Market_version", "Description", "Price", "Owners", "Extras", "Turbo_Id", "Shop_Name", "Owner_Name","Crashed", "Insert_Date"]
                     values = [car_data.get(column.lower(), "") for column in columns]
 
                     cursor = conn.cursor()
                     sql = f'''INSERT INTO "{table_name}" ("{'", "'.join(columns)}") VALUES ({', '.join(['%s' for _ in range(len(columns))])})'''
                     cursor.execute(sql, values)
                     conn.commit()
-                except:
-                    pass
+                except Exception as ex:
+                    conn.rollback()
+                    print(ex)
                 #-------------------------------------------------------------------------------------
 
                 driver.close()
                 methods.switch_tab(driver, 0)
                 n=n+1
-                print(brand[1],' ', n)
+                print(brand[1],' ', page, ' ', n)
             except Exception as ex:
                 conn.rollback()
                 cursor = conn.cursor()
-                sql = f'''INSERT INTO "Errors" ("Error", "TurboAzId","Insert_Date") VALUES ('{ex}', '{turbo_id}', '{str(datetime.now())}') '''
+                ex_text = str(ex).replace("'", "")
+                sql = f'''INSERT INTO "Errors" ("Error", "TurboAzId","Insert_Date") VALUES ('{ex_text}', '{turbo_id}', '{str(datetime.now())}') '''
                 cursor.execute(sql)
                 conn.commit()
                 pass
