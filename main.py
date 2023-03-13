@@ -139,7 +139,7 @@ for brand in methods.brands:
                 driver.close()
                 methods.switch_tab(driver, 0)
                 n=n+1
-                print(brand[1],' ', page, ' ', n)
+                print(brand[1],' ', page-1, ' ', n)
             except Exception as ex:
                 conn.rollback()
                 cursor = conn.cursor()

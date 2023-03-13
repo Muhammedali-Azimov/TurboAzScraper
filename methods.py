@@ -47,10 +47,7 @@ properties_dict = {
     "Qəzalı": "crashed"
 }
 
-brands =[[3, 'BMW'], 
-        [62, 'BMW Alpina'],  [92, 'Brilliance'],  [84, 'Buick'],  [51, 'BYD'],  [395, 'C.Moto'],  [38, 'Cadillac'],  
-        [220, 'Can-Am'],  [397, 'Cevo'],  [259, 'CFMOTO'],  [163, 'Changan'],  [52, 'Chery'],  [41, 'Chevrolet'], 
-        [10, 'Chrysler'],  [27, 'Citroen'],  [76, 'Dacia'],  [180, 'Dadi'],  [11, 'Daewoo'],  [91, 'DAF'],  
+brands =[[11, 'Daewoo'],  [91, 'DAF'],  
         [148, 'Dayun'],  [405, 'DFSK'],  [162, 'Dnepr'],  [60, 'Dodge'],  [117, 'DongFeng'],  [147, 'Ducati'],  
         [79, 'FAW'],  [42, 'Ferrari'],  [37, 'Fiat'],  [2, 'Ford'],  [49, 'Foton'],  [159, 'Gabro'],  [175, 'GAC'],  
         [21, 'GAZ'],  [72, 'Geely'],  [376, 'Genesis'],  [263, 'GIBBS'],  [82, 'GMC'],  [50, 'Great Wall'],  
