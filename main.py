@@ -11,7 +11,8 @@ driver = methods.get_driver("about:blank")
 for brand in methods.brands:
     n=0
     page = 1
-    print(brand[0], brand[1])
+    
+    print(brand[1])
     main_url = methods.get_url_for_page(brand,page)
     methods.open_tab(driver, main_url)
     methods.switch_tab(driver, 1)

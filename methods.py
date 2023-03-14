@@ -47,12 +47,7 @@ properties_dict = {
     "Qəzalı": "crashed"
 }
 
-brands =[[11, 'Daewoo'],  [91, 'DAF'],  
-        [148, 'Dayun'],  [405, 'DFSK'],  [162, 'Dnepr'],  [60, 'Dodge'],  [117, 'DongFeng'],  [147, 'Ducati'],  
-        [79, 'FAW'],  [42, 'Ferrari'],  [37, 'Fiat'],  [2, 'Ford'],  [49, 'Foton'],  [159, 'Gabro'],  [175, 'GAC'],  
-        [21, 'GAZ'],  [72, 'Geely'],  [376, 'Genesis'],  [263, 'GIBBS'],  [82, 'GMC'],  [50, 'Great Wall'],  
-        [383, 'Haima'],  [142, 'Haojue'],  [140, 'Harley-Davidson'],  [242, 'Haval'],  [12, 'Honda'],  [388, 'Hongqi'],  
-        [110, 'HOWO'],  [409, 'Hozon'],  [13, 'Hummer'],  [1, 'Hyundai'],  [64, 'IJ'],  [101, 'Ikarus'],  [15, 'Infiniti'], 
+brands =[[1, 'Hyundai'],  [64, 'IJ'],  [101, 'Ikarus'],  [15, 'Infiniti'], 
         [116, 'Iran Khodro'],  [74, 'Isuzu'],  [67, 'Iveco'],  [124, 'JAC'],  [35, 'Jaguar'],  [36, 'Jeep'],  [384, 'Jetour'],
         [337, 'Jianshe'],  [109, 'JMC'],  [235, 'Jonway'],  [390, 'KAIYI'],  [90, 'KamAz'],  [406, 'Kanuni'],  [139, 'Kawasaki'], 
         [338, 'Keeway'],  [282, 'Khazar'],  [8, 'Kia'],  [169, 'Kinroad'],  [119, 'KrAZ'],  [332, 'Kuba'],  [5, 'LADA (VAZ)'],
