@@ -47,25 +47,7 @@ properties_dict = {
     "Qəzalı": "crashed"
 }
 
-brands =[[1, 'Hyundai'],  [64, 'IJ'],  [101, 'Ikarus'],  [15, 'Infiniti'], 
-        [116, 'Iran Khodro'],  [74, 'Isuzu'],  [67, 'Iveco'],  [124, 'JAC'],  [35, 'Jaguar'],  [36, 'Jeep'],  [384, 'Jetour'],
-        [337, 'Jianshe'],  [109, 'JMC'],  [235, 'Jonway'],  [390, 'KAIYI'],  [90, 'KamAz'],  [406, 'Kanuni'],  [139, 'Kawasaki'], 
-        [338, 'Keeway'],  [282, 'Khazar'],  [8, 'Kia'],  [169, 'Kinroad'],  [119, 'KrAZ'],  [332, 'Kuba'],  [5, 'LADA (VAZ)'],
-        [43, 'Lamborghini'],  [20, 'Land Rover'],  [14, 'Lexus'],  [87, 'Lifan'],  [46, 'Lincoln'],  [103, 'LuAz'],  
-        [112, 'MAN'],  [44, 'Maserati'],  [100, 'MAZ'],  [26, 'Mazda'],  [326, 'McLaren'],  [172, 'Megelli'],  [4, 'Mercedes'], 
-        [252, 'Mercedes-Maybach'],  [127, 'MG'],  [31, 'Mini'],  [146, 'Minsk'],   [6, "Mitsubishi"],   [286, "Mondial"],   
-        [81, "Moskvich"],   [243, "Muravey"],   [324, "Nama"],   [7, "Nissan"],   [106, "Oldsmobile"],   [29, "Opel"],   
-        [181, "Otocar"],   [114, "PAZ"],   [16, "Peugeot"],   [392, "Pilotcar"],   [247, "Polaris"],   [396, "Polestar"],   
-        [32, "Porsche"],   [105, "RAF"],   [272, "Ravon"],   [17, "Renault"],   [333, "RKS"],   [18, "Rolls-Royce"],   
-        [78, "Rover"],   [80, "Saab"],   [94, "Saipa"],   [377, "SamAuto"],   [93, "Saturn"],   [108, "Scania"],   
-        [251, "Scion"],   [59, "SEAT"],   [115, "Setra"],   [133, "Shacman"],   [132, "Shaolin"],   [144, "Shineray"],   
-        [400, "Sinotech"],   [22, "Skoda"],   [399, "Skywell"],   [61, "Smart"],   [402, "Soueast"],   [45, "Ssang Yong"],   
-        [34, "Subaru"],   [33, "Suzuki"],   [380, "SYM"],   [245, "Tesla"],   [39, "Tofas"],   [23, "Toyota"],   
-        [233, "Triumph"],   [385, "Tufan"],   [53, "UAZ"],   [145, "Ural"],   [223, "Vespa"],   [24, "Volkswagen"],   
-        [25, "Volvo"],   [150, "Vosxod"],   [404, "Wuling"],   [138, "Yamaha"],   [57, "ZAZ"],   [403, "Zeekr"],   
-        [85, "ZIL"],   [285, "Zongshen"],   [143, "Zontes"],   [217, "ZX Auto"] ]
-
-brands_copy =[[280, 'Abarth'],  [28, 'Acura'],  [30, 'Alfa Romeo'],  [156, 'Aprilia'],  [86, 'Aston Martin'],  [268, 'ATV'],  
+brands =[[280, 'Abarth'],  [28, 'Acura'],  [30, 'Alfa Romeo'],  [156, 'Aprilia'],  [86, 'Aston Martin'],  [268, 'ATV'],  
         [9, 'Audi'],  [274, 'Avia'],  [218, 'Baic'],  [327, 'Bajaj'],  [19, 'Bentley'],  [387, 'Bestune'],  [3, 'BMW'], 
         [62, 'BMW Alpina'],  [92, 'Brilliance'],  [84, 'Buick'],  [51, 'BYD'],  [395, 'C.Moto'],  [38, 'Cadillac'],  
         [220, 'Can-Am'],  [397, 'Cevo'],  [259, 'CFMOTO'],  [163, 'Changan'],  [52, 'Chery'],  [41, 'Chevrolet'], 
